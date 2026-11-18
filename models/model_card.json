@@ -1,0 +1,365 @@
+{
+  "model_version": "delay-logistic-regression-v1-673499bf",
+  "selected_model": "logistic_regression",
+  "selection_rule": "lowest validation log-loss among learned models",
+  "trained_at": "2026-11-17T18:29:59+00:00",
+  "data_as_of": "2025-10-14 23:55:00",
+  "training_data_sha256": "673499bf201ea0ac58eb1aad6b90957b1dc78f4180a288c7bee3bb1c053e2749",
+  "sklearn_version": "1.9.1",
+  "label": "actual_arrival - planned_arrival > 24h (arrived shipments only)",
+  "features": {
+    "categorical": [
+      "origin_port",
+      "destination_port",
+      "cargo_type",
+      "vessel_id",
+      "dep_month"
+    ],
+    "numeric": [
+      "container_count",
+      "weight_tons",
+      "booking_lead_days",
+      "transit_days_planned",
+      "origin_congestion",
+      "destination_congestion",
+      "route_hist_n",
+      "route_hist_late_rate",
+      "vessel_hist_n",
+      "vessel_hist_late_rate",
+      "origin_events_7d",
+      "origin_delayed_events_7d",
+      "origin_delay_minutes_30d",
+      "destination_events_7d",
+      "destination_delayed_events_7d",
+      "destination_delay_minutes_30d"
+    ]
+  },
+  "excluded_as_leakage": [
+    "actual_arrival",
+    "actual_delay_hours",
+    "actual_departure",
+    "departure_delay_hours",
+    "dq_flags",
+    "on_time_flag",
+    "status",
+    "transit_days_actual"
+  ],
+  "split": {
+    "rule": "time-based on booking_date",
+    "train": "< 2025-04-01 (n=2741)",
+    "validation": "[2025-04-01, 2025-07-01) (n=828)",
+    "test": ">= 2025-07-01 (n=995)",
+    "shipped_model_trained_on": "train + validation"
+  },
+  "decision_threshold": 0.3771,
+  "results": {
+    "prior": {
+      "params": {},
+      "validation": {
+        "log_loss": 0.6793,
+        "roc_auc": null
+      },
+      "test": {
+        "n": 995,
+        "positive_rate": 0.4101,
+        "threshold": 0.3991,
+        "predicted_positive_rate": 1.0,
+        "precision": 0.4101,
+        "recall": 1.0,
+        "f1": 0.5816,
+        "roc_auc": null,
+        "pr_auc": 0.4101,
+        "brier": 0.242,
+        "log_loss": 0.677
+      },
+      "test_at_0_5": {
+        "n": 995,
+        "positive_rate": 0.4101,
+        "threshold": 0.5,
+        "predicted_positive_rate": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "roc_auc": null,
+        "pr_auc": 0.4101,
+        "brier": 0.242,
+        "log_loss": 0.677
+      }
+    },
+    "route_history_baseline": {
+      "params": {},
+      "validation": {
+        "log_loss": 0.7002,
+        "roc_auc": 0.4485
+      },
+      "test": {
+        "n": 995,
+        "positive_rate": 0.4101,
+        "threshold": 0.2818,
+        "predicted_positive_rate": 0.9588,
+        "precision": 0.4088,
+        "recall": 0.9559,
+        "f1": 0.5727,
+        "roc_auc": 0.4758,
+        "pr_auc": 0.4067,
+        "brier": 0.2486,
+        "log_loss": 0.6913
+      },
+      "test_at_0_5": {
+        "n": 995,
+        "positive_rate": 0.4101,
+        "threshold": 0.5,
+        "predicted_positive_rate": 0.0935,
+        "precision": 0.4409,
+        "recall": 0.1005,
+        "f1": 0.1637,
+        "roc_auc": 0.4758,
+        "pr_auc": 0.4067,
+        "brier": 0.2486,
+        "log_loss": 0.6913
+      },
+      "test_auc_95ci": [
+        0.4386,
+        0.5111
+      ],
+      "test_auc_permutation_p": 0.8981
+    },
+    "logistic_regression": {
+      "params": {
+        "C": 0.001
+      },
+      "validation": {
+        "log_loss": 0.6795,
+        "roc_auc": 0.5019
+      },
+      "test": {
+        "n": 995,
+        "positive_rate": 0.4101,
+        "threshold": 0.3771,
+        "predicted_positive_rate": 0.9739,
+        "precision": 0.4045,
+        "recall": 0.9608,
+        "f1": 0.5694,
+        "roc_auc": 0.5063,
+        "pr_auc": 0.4239,
+        "brier": 0.2421,
+        "log_loss": 0.6774
+      },
+      "test_at_0_5": {
+        "n": 995,
+        "positive_rate": 0.4101,
+        "threshold": 0.5,
+        "predicted_positive_rate": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "roc_auc": 0.5063,
+        "pr_auc": 0.4239,
+        "brier": 0.2421,
+        "log_loss": 0.6774
+      },
+      "test_auc_95ci": [
+        0.4705,
+        0.5434
+      ],
+      "test_auc_permutation_p": 0.3616
+    },
+    "gradient_boosting": {
+      "params": {
+        "learning_rate": 0.03,
+        "max_depth": 2
+      },
+      "validation": {
+        "log_loss": 0.7015,
+        "roc_auc": 0.482
+      },
+      "test": {
+        "n": 995,
+        "positive_rate": 0.4101,
+        "threshold": 0.2044,
+        "predicted_positive_rate": 0.999,
+        "precision": 0.4095,
+        "recall": 0.9975,
+        "f1": 0.5806,
+        "roc_auc": 0.5197,
+        "pr_auc": 0.4435,
+        "brier": 0.2446,
+        "log_loss": 0.6832
+      },
+      "test_at_0_5": {
+        "n": 995,
+        "positive_rate": 0.4101,
+        "threshold": 0.5,
+        "predicted_positive_rate": 0.0503,
+        "precision": 0.52,
+        "recall": 0.0637,
+        "f1": 0.1135,
+        "roc_auc": 0.5197,
+        "pr_auc": 0.4435,
+        "brier": 0.2446,
+        "log_loss": 0.6832
+      },
+      "test_auc_95ci": [
+        0.482,
+        0.5576
+      ],
+      "test_auc_permutation_p": 0.1409
+    }
+  },
+  "always_predict_late_reference": {
+    "n": 995,
+    "positive_rate": 0.4101,
+    "threshold": 0.5,
+    "predicted_positive_rate": 1.0,
+    "precision": 0.4101,
+    "recall": 1.0,
+    "f1": 0.5816,
+    "roc_auc": null,
+    "pr_auc": 0.4101,
+    "brier": 0.5899,
+    "log_loss": 8.1505
+  },
+  "test_calibration": [
+    {
+      "bin": "0.339-0.393",
+      "n": 199,
+      "mean_predicted": 0.385,
+      "observed_rate": 0.3869
+    },
+    {
+      "bin": "0.393-0.401",
+      "n": 199,
+      "mean_predicted": 0.3971,
+      "observed_rate": 0.4372
+    },
+    {
+      "bin": "0.401-0.407",
+      "n": 199,
+      "mean_predicted": 0.4037,
+      "observed_rate": 0.3819
+    },
+    {
+      "bin": "0.407-0.415",
+      "n": 199,
+      "mean_predicted": 0.4108,
+      "observed_rate": 0.402
+    },
+    {
+      "bin": "0.415-0.447",
+      "n": 199,
+      "mean_predicted": 0.4223,
+      "observed_rate": 0.4422
+    }
+  ],
+  "test_permutation_importance": [
+    {
+      "feature": "origin_congestion",
+      "auc_drop_mean": 0.0134,
+      "auc_drop_std": 0.0048
+    },
+    {
+      "feature": "route_hist_late_rate",
+      "auc_drop_mean": 0.0066,
+      "auc_drop_std": 0.0043
+    },
+    {
+      "feature": "origin_delayed_events_7d",
+      "auc_drop_mean": 0.0059,
+      "auc_drop_std": 0.0038
+    },
+    {
+      "feature": "dep_month",
+      "auc_drop_mean": 0.0039,
+      "auc_drop_std": 0.0025
+    },
+    {
+      "feature": "cargo_type",
+      "auc_drop_mean": 0.0029,
+      "auc_drop_std": 0.0011
+    },
+    {
+      "feature": "destination_delayed_events_7d",
+      "auc_drop_mean": 0.0027,
+      "auc_drop_std": 0.0011
+    },
+    {
+      "feature": "destination_events_7d",
+      "auc_drop_mean": 0.0026,
+      "auc_drop_std": 0.0006
+    },
+    {
+      "feature": "route_hist_n",
+      "auc_drop_mean": 0.0021,
+      "auc_drop_std": 0.0009
+    },
+    {
+      "feature": "vessel_id",
+      "auc_drop_mean": 0.0011,
+      "auc_drop_std": 0.0008
+    },
+    {
+      "feature": "origin_events_7d",
+      "auc_drop_mean": 0.0007,
+      "auc_drop_std": 0.0036
+    },
+    {
+      "feature": "vessel_hist_n",
+      "auc_drop_mean": -0.0003,
+      "auc_drop_std": 0.0001
+    },
+    {
+      "feature": "destination_delay_minutes_30d",
+      "auc_drop_mean": -0.0005,
+      "auc_drop_std": 0.0035
+    },
+    {
+      "feature": "vessel_hist_late_rate",
+      "auc_drop_mean": -0.0006,
+      "auc_drop_std": 0.0009
+    },
+    {
+      "feature": "origin_port",
+      "auc_drop_mean": -0.0007,
+      "auc_drop_std": 0.0017
+    },
+    {
+      "feature": "booking_lead_days",
+      "auc_drop_mean": -0.0011,
+      "auc_drop_std": 0.0099
+    },
+    {
+      "feature": "transit_days_planned",
+      "auc_drop_mean": -0.0011,
+      "auc_drop_std": 0.0018
+    },
+    {
+      "feature": "destination_port",
+      "auc_drop_mean": -0.0015,
+      "auc_drop_std": 0.0017
+    },
+    {
+      "feature": "container_count",
+      "auc_drop_mean": -0.0019,
+      "auc_drop_std": 0.0052
+    },
+    {
+      "feature": "destination_congestion",
+      "auc_drop_mean": -0.0034,
+      "auc_drop_std": 0.0023
+    },
+    {
+      "feature": "weight_tons",
+      "auc_drop_mean": -0.0106,
+      "auc_drop_std": 0.0046
+    },
+    {
+      "feature": "origin_delay_minutes_30d",
+      "auc_drop_mean": -0.0139,
+      "auc_drop_std": 0.0081
+    }
+  ],
+  "leakage_canary": {
+    "description": "same logistic pipeline + departure_delay_hours (post-departure)",
+    "test_roc_auc": 0.968
+  }
+}

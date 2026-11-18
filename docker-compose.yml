@@ -1,0 +1,59 @@
+# One command: `docker compose up --build`
+#   pipeline : one-shot job -> DQ report + DuckDB warehouse into the shared volume, then exits 0
+#   api      : starts only after pipeline succeeded; serves on http://localhost:8000
+x-image: &image
+  build:
+    context: .
+    args:
+      GIT_SHA: ${GIT_SHA:-local}
+  image: supply-chain-intel:${GIT_SHA:-local}
+
+services:
+  pipeline:
+    <<: *image
+    command: ["sh", "scripts/prepare_data.sh"]
+    environment:
+      LOG_LEVEL: INFO
+      DQ_FAIL_ON: fail   # block the build if any check breaches its fail threshold
+    volumes:
+      - warehouse:/app/data/out
+
+  api:
+    <<: *image
+    depends_on:
+      pipeline:
+        condition: service_completed_successfully
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      LOG_LEVEL: INFO
+    volumes:
+      - warehouse:/app/data/out:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2).status == 200 else 1)"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+    restart: unless-stopped
+
+  # Optional GenAI assistant (CLI). Not started by `up`; run on demand:
+  #   docker compose run --rm assistant "Which routes had the highest average delay this quarter?"
+  # GEMINI_API_KEY comes from your shell or the git-ignored .env file - never baked into the image.
+  assistant:
+    <<: *image
+    profiles: ["assistant"]
+    entrypoint: ["python", "-m", "assistant"]
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.1-flash-lite}
+      ASSISTANT_API_URL: http://api:8000
+    volumes:
+      - assistant-logs:/app/logs
+
+volumes:
+  warehouse:
+  assistant-logs:
